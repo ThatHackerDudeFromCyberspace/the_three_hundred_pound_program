@@ -8,16 +8,16 @@
 #include <thread>
 
 HMDDevice::HMDDevice() {
-    vr::VRSettings()->GetString("driver_300hmd", "model_number", modelNumber, sizeof(modelNumber));
-    vr::VRSettings()->GetString("driver_300hmd", "serial_number", serialNumber, sizeof(serialNumber));
+    vr::VRSettings()->GetString("driver_three_hundred_driver_hmd_settings", "model_number", modelNumber, sizeof(modelNumber));
+    vr::VRSettings()->GetString("driver_three_hundred_driver_hmd_settings", "serial_number", serialNumber, sizeof(serialNumber));
 
     DisplayComponentConfig config = {
-        .window_x = vr::VRSettings()->GetInt32( "driver_300hmd", "window_x" ),
-        .window_y = vr::VRSettings()->GetInt32( "driver_300hmd", "window_y" ),
-        .window_width = vr::VRSettings()->GetInt32( "driver_300hmd", "window_width" ),
-        .window_height = vr::VRSettings()->GetInt32( "driver_300hmd", "window_height" ),
-        .render_width = vr::VRSettings()->GetInt32( "driver_300hmd", "render_width" ),
-        .render_height = vr::VRSettings()->GetInt32( "driver_300hmd", "render_height" )
+        .window_x = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_x" ),
+        .window_y = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_y" ),
+        .window_width = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_width" ),
+        .window_height = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_height" ),
+        .render_width = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "render_width" ),
+        .render_height = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "render_height" )
     };
 
     displayComponent = new DisplayComponent(config);
@@ -58,6 +58,9 @@ vr::EVRInitError HMDDevice::Activate(uint32_t unObjectId) {
 	vr::VRProperties()->SetBoolProperty( container, vr::Prop_IsOnDesktop_Bool, false );
 
 	vr::VRProperties()->SetBoolProperty(container, vr::Prop_DisplayDebugMode_Bool, true);
+
+    // Load inputs
+    vr::VRProperties()->SetStringProperty( container, vr::Prop_InputProfilePath_String, "{three_hundred_fuzzer}/input/hmd_profile.json" );
 
     updateThread = std::thread(&HMDDevice::updateThread, this);
 

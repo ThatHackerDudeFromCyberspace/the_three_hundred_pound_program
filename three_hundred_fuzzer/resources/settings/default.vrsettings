@@ -1,0 +1,11 @@
+{
+  "driver_three_hundred_driver": {
+    "enable": true,
+    "loadPriority": 100,
+    "blocked_by_safe_mode": false
+  },
+  "driver_three_hundred_driver_hmd_settings": {
+    "model_number": "modelNumber",
+    "serial_number": "serialNumber"
+  }
+}
