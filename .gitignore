@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+/builddir
+
+/subprojects/*
+!/subprojects/*.wrap
