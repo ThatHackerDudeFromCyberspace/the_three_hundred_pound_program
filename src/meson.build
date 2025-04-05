@@ -5,6 +5,7 @@ sources = files(
 
 
 shared_library('three_hundred',
-                        sources,
-                        include_directories : include_dirs
+    sources,
+    include_directories: include_dirs,
+    dependencies: openvr_dep
 )
