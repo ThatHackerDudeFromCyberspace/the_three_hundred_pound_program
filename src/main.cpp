@@ -1,4 +1,5 @@
 #include "openvr_driver.h"
+#include "trackedDeviceProvider.h"
 #include <cstring>
 
 #ifdef WIN32
@@ -7,23 +8,23 @@
 #define HMD_DLL_EXPORT extern "C" __attribute__((__visibility__("default")))
 #endif
 
-using namespace vr;
+TrackedDeviceProvider trackedDeviceProvider;
 
 HMD_DLL_EXPORT 
 void *HmdDriverFactory( const char *pInterfaceName, int *pReturnCode )
 {
-	if( 0 == strcmp( IServerTrackedDeviceProvider_Version, pInterfaceName ) )
+	if( 0 == strcmp( vr::IServerTrackedDeviceProvider_Version, pInterfaceName ) )
 	{
-		return 0;
+		return &trackedDeviceProvider;
 	}
-	if( 0 == strcmp( IVRWatchdogProvider_Version, pInterfaceName ) )
+	if( 0 == strcmp( vr::IVRWatchdogProvider_Version, pInterfaceName ) )
 	{
-		return 0;
+		return 0; // global for watchdog
 	}
 
 
 	if( pReturnCode )
-		*pReturnCode = VRInitError_Init_InterfaceNotFound;
+		*pReturnCode = vr::VRInitError_Init_InterfaceNotFound;
 
 	return NULL;
 }
