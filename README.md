@@ -24,3 +24,6 @@ meson compile
 `input_profile_path` must be set to a valid input profile path - this profile path will be used to instantiate the controller's inputs.
 
 The code loads the `three_hundred_fuzzer`'s `controller_profile.json` file, but it uses the profile path specified in the `default.vrsettings` file for creating the inputs themselves. (idk why I did this ok have fun!)
+
+### Log
+Logs for this driver are in `~/.local/share/Steam/logs/vrstartup-linux.txt` and are prefixed with `[Fuzzer300]` for convenience
