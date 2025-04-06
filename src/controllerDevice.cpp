@@ -153,6 +153,7 @@ void ControllerDevice::UpdateThread() {
                 switch (inputList[message.path].inputType) {
                     case InputType::SCALAR_ONE_SIDED:
                     case InputType::SCALAR_TWO_SIDED:
+                        printf("[Fuzzer300] Setting [%s] to scalar float: [%f]\n", message.path.c_str(), atof(message.param.c_str()));
                         vr::VRDriverInput()->UpdateScalarComponent(
                             inputHandles[message.path],
                             atof(message.param.c_str()),
@@ -160,6 +161,7 @@ void ControllerDevice::UpdateThread() {
                         );
                         break;
                     case InputType::BOOLEAN:
+                        printf("[Fuzzer300] Setting [%s] to boolean: [%i]\n", message.path.c_str(), atoi(message.param.c_str()));
                         vr::VRDriverInput()->UpdateBooleanComponent(
                             inputHandles[message.path],
                             atoi(message.param.c_str()) == 1,
