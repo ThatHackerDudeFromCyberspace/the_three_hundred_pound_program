@@ -5,7 +5,8 @@ A SteamVR input fuzzer driver designed for researching how bindings and input tr
 
 ## How to compile
 1. Install Meson
-2. ```sh
+2. 
+```sh
 meson setup builddir
 cd builddir
 meson compile
@@ -17,3 +18,9 @@ meson compile
 3. Copy the `three_hundred_fuzzer` folder to ` ~/.steam/steam/steamapps/common/SteamVR/drivers/`
 4. Run SteamVR
 5. Look in `test/test.py` on how to use it once it is running
+
+### Configuration
+`default.vrsettings` contains some random config info, most of it is unimportant, however:  
+`input_profile_path` must be set to a valid input profile path - this profile path will be used to instantiate the controller's inputs.
+
+The code loads the `three_hundred_fuzzer`'s `controller_profile.json` file, but it uses the profile path specified in the `default.vrsettings` file for creating the inputs themselves. (idk why I did this ok have fun!)
