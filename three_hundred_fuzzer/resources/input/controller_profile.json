@@ -1,6 +1,6 @@
 {
     "jsonid": "input_profile",
-    "controller_type": "oculus_touch",
+    "controller_type": "fuzzer_controller",
     "device_class" : "TrackedDeviceClass_Controller",
     "resource_root" : "oculus",
     "driver_name" : "oculus",
