@@ -16,7 +16,7 @@ int main() {
 
     std::map<std::string, InputInfo> inputList = parseInputList(inputPath);
 
-    printf("\n\nGenerated inputs:\n");
+    printf("\n\nParsed inputs:\n");
     for (auto& input : inputList) {
         std::string inputType;
         switch (input.second.inputType) {
