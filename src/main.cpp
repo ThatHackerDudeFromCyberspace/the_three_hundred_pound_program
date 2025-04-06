@@ -1,6 +1,7 @@
 #include "openvr_driver.h"
 #include "trackedDeviceProvider.h"
 #include <cstring>
+#include <filesystem>
 
 #ifdef WIN32
 #define HMD_DLL_EXPORT extern "C" __declspec( dllexport )
@@ -12,7 +13,7 @@ TrackedDeviceProvider trackedDeviceProvider;
 
 HMD_DLL_EXPORT 
 void *HmdDriverFactory( const char *pInterfaceName, int *pReturnCode )
-{
+{	
 	if( 0 == strcmp( vr::IServerTrackedDeviceProvider_Version, pInterfaceName ) )
 	{
 		return &trackedDeviceProvider;

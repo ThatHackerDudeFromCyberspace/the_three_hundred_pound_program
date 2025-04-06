@@ -1,5 +1,6 @@
 #pragma once
 
+#include "controllerDevice.h"
 #include "globalState.h"
 #include "hmdDevice.h"
 #include "openvr_driver.h"
@@ -18,4 +19,6 @@ public:
     bool ShouldBlockStandbyMode() override { return false; } // ShouldBlockStandbyMode is deprecated, and will never be called in newer versions of SteamVR. Drivers must implement this function (because it is pure virtual), but the return value has no effect on behavior.
 private:
     HMDDevice* hmdDevice;
+    ControllerDevice* leftController;
+    ControllerDevice* rightController;
 };

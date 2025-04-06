@@ -4,7 +4,10 @@ sources = files(
     'trackedDeviceProvider.cpp',
     'hmdDevice.cpp',
     'globalState.cpp',
-    'displayComponent.cpp'
+    'displayComponent.cpp',
+    'pipeHandler.cpp',
+    'controllerDevice.cpp',
+    'inputParser.cpp'
 )
 
 
