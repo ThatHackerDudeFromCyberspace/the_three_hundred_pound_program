@@ -14,7 +14,7 @@ meson compile
 
 ## How do I use this
 1. Compile it
-2. Copy the `driver_three_hundred_fuzzer.so` file to the `three_hundred_fuzzer` folder
+2. Copy the `driver_three_hundred_fuzzer.so` file to the `three_hundred_fuzzer/bin/linux64` folder
 3. Copy the `three_hundred_fuzzer` folder to ` ~/.steam/steam/steamapps/common/SteamVR/drivers/`
 4. Run SteamVR
 5. Look in `test/test.py` on how to use it once it is running
