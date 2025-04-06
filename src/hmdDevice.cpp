@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstring>
+#include <memory>
 #include <thread>
 
 HMDDevice::HMDDevice() {
@@ -12,20 +13,21 @@ HMDDevice::HMDDevice() {
     vr::VRSettings()->GetString("driver_three_hundred_driver_hmd_settings", "serial_number", serialNumber, sizeof(serialNumber));
 
     DisplayComponentConfig config = {
-        .window_x = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_x" ),
-        .window_y = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_y" ),
-        .window_width = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_width" ),
-        .window_height = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "window_height" ),
-        .render_width = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "render_width" ),
-        .render_height = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_settings", "render_height" )
+        .window_x = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_display_settings", "window_x" ),
+        .window_y = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_display_settings", "window_y" ),
+        .window_width = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_display_settings", "window_width" ),
+        .window_height = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_display_settings", "window_height" ),
+        .render_width = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_display_settings", "render_width" ),
+        .render_height = vr::VRSettings()->GetInt32( "driver_three_hundred_driver_hmd_display_settings", "render_height" )
     };
 
-    displayComponent = new DisplayComponent(config);
+    displayComponent = std::make_unique<DisplayComponent>(config);
 }
 
 vr::EVRInitError HMDDevice::Activate(uint32_t unObjectId) {
     deviceIndex = unObjectId;
     isActive = true;
+	printf("300P - HMD Activated!\n");
 
     // Following code taken from https://github.com/ValveSoftware/openvr/blob/master/samples/drivers/drivers/simplehmd/src/hmd_device_driver.cpp
 
@@ -60,9 +62,11 @@ vr::EVRInitError HMDDevice::Activate(uint32_t unObjectId) {
 	vr::VRProperties()->SetBoolProperty(container, vr::Prop_DisplayDebugMode_Bool, true);
 
     // Load inputs
+	printf("Loading input\n");
     vr::VRProperties()->SetStringProperty( container, vr::Prop_InputProfilePath_String, "{three_hundred_fuzzer}/input/hmd_profile.json" );
 
-    updateThread = std::thread(&HMDDevice::updateThread, this);
+	printf("Starting update thread\n");
+    updateThread = std::thread(&HMDDevice::UpdateThread, this);
 
 	// We've activated everything successfully!
 	// Let's tell SteamVR that by saying we don't have any errors.
@@ -73,7 +77,7 @@ void* HMDDevice::GetComponent( const char *pchComponentNameAndVersion )
 {
 	if ( strcmp( pchComponentNameAndVersion, vr::IVRDisplayComponent_Version ) == 0 )
 	{
-		return displayComponent;
+		return displayComponent.get();
 	}
 
 	return nullptr;

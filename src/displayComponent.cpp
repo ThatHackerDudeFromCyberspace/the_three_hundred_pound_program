@@ -63,6 +63,10 @@ vr::DistortionCoordinates_t DisplayComponent::ComputeDistortion( vr::EVREye eEye
 	return coordinates;
 }
 
+bool DisplayComponent::ComputeInverseDistortion(vr::HmdVector2_t *pResult, vr::EVREye eEye, uint32_t unChannel, float fU, float fV ) {
+	return false;
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: To inform vrcompositor what the window bounds for this virtual HMD are.
 //-----------------------------------------------------------------------------

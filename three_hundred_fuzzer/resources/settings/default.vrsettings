@@ -5,7 +5,17 @@
     "blocked_by_safe_mode": false
   },
   "driver_three_hundred_driver_hmd_settings": {
-    "model_number": "modelNumber",
-    "serial_number": "serialNumber"
-  }
+    "model_number": "IDK-12345",
+    "serial_number": "IDK-12345"
+  },
+  "driver_three_hundred_driver_hmd_display_settings": {
+	    "window_x": 0,
+	    "window_y": 0,
+	    "window_width": 2160,
+	    "window_height": 1200,
+	    "render_width": 1512,
+	    "render_height": 1680,
+	    "vsync_to_photons": 0.011,
+	    "display_frequency": 0
+    }
 }

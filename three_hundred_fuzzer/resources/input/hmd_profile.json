@@ -2,10 +2,6 @@
     "jsonid": "input_profile",
     "controller_type": "300hmd",
     "input_bindingui_mode": "hmd",
-    "input_source": {
-        "/pose/raw": {
-            "type": "pose",
-            "binding_image_point": [ 105, 200 ]
-        }
-    }
+    "input_source": { },
+    "default_bindings": []
 }

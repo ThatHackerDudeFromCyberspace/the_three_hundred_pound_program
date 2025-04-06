@@ -7,7 +7,7 @@
 class HMDDevice : public vr::ITrackedDeviceServerDriver {
 public:
     HMDDevice();
-    virtual ~HMDDevice() { delete displayComponent; };
+    virtual ~HMDDevice() { };
     vr::EVRInitError Activate( uint32_t unObjectId ) override;
     void Deactivate() override { isActive = false; };
     void EnterStandby() override {};
@@ -21,6 +21,6 @@ private:
     uint32_t deviceIndex; // Apparently this is useful
     char modelNumber[1024]; // I don't get this
     char serialNumber[1024]; // Or this
-    DisplayComponent* displayComponent;
+    std::unique_ptr<DisplayComponent> displayComponent;
     std::thread updateThread;
 };

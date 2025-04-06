@@ -17,12 +17,8 @@ void *HmdDriverFactory( const char *pInterfaceName, int *pReturnCode )
 	{
 		return &trackedDeviceProvider;
 	}
-	if( 0 == strcmp( vr::IVRWatchdogProvider_Version, pInterfaceName ) )
-	{
-		return 0; // global for watchdog
-	}
 
-
+	// Otherwise tell the runtime that we don't have this interface.
 	if( pReturnCode )
 		*pReturnCode = vr::VRInitError_Init_InterfaceNotFound;
 

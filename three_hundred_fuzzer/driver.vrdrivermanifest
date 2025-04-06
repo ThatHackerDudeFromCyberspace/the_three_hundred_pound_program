@@ -1,5 +1,5 @@
 {
-  "alwaysActivate": false,
+  "alwaysActivate": true,
   "name": "three_hundred_fuzzer",
   "directory": "",
   "resourceOnly": false,
