@@ -141,7 +141,7 @@ void ControllerDevice::UpdateThread() {
 		std::this_thread::sleep_for( std::chrono::milliseconds( 5 ) );
 
         if ((side == Side::LEFT && PipeHandler::GetPipeHandler()->LeftMessageAvailable()) || (side == Side::RIGHT && PipeHandler::GetPipeHandler()->RightMessageAvailable())) {
-            printf("[Fuzzer300] Message available for controller %i\n", side == Side::LEFT ? "LEFT" : "RIGHT");
+            printf("[Fuzzer300] Message available for controller %s\n", side == Side::LEFT ? "LEFT" : "RIGHT");
             Message message;
             if (side == Side::LEFT) {
                 message = PipeHandler::GetPipeHandler()->PopLeftMessage();
