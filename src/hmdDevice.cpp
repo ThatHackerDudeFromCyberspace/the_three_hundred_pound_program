@@ -28,7 +28,7 @@ HMDDevice::HMDDevice() {
 vr::EVRInitError HMDDevice::Activate(uint32_t unObjectId) {
     deviceIndex = unObjectId;
     isActive = true;
-	printf("Fuzzer300 - HMD Activated!\n");
+	printf("[Fuzzer300] - HMD Activated!\n");
 
     // Following code taken from https://github.com/ValveSoftware/openvr/blob/master/samples/drivers/drivers/simplehmd/src/hmd_device_driver.cpp
 
@@ -63,10 +63,10 @@ vr::EVRInitError HMDDevice::Activate(uint32_t unObjectId) {
 	vr::VRProperties()->SetBoolProperty(container, vr::Prop_DisplayDebugMode_Bool, true);
 
     // Load inputs
-	printf("Fuzzer300 Loading input\n");
+	printf("[Fuzzer300] Loading input\n");
     vr::VRProperties()->SetStringProperty( container, vr::Prop_InputProfilePath_String, "{three_hundred_fuzzer}/input/hmd_profile.json" );
 
-	printf("Fuzzer300 Starting update thread\n");
+	printf("[Fuzzer300] Starting update thread\n");
     updateThread = std::thread(&HMDDevice::UpdateThread, this);
 
 	// We've activated everything successfully!

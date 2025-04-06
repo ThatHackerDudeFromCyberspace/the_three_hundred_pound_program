@@ -131,7 +131,7 @@ vr::DriverPose_t ControllerDevice::GetPose()
 }
 
 void ControllerDevice::UpdateThread() {
-    printf("== Fuzzer300 Update Thread started for controller\n");
+    printf("[Fuzzer300] Update Thread started for controller\n");
     while (isActive) {
         // Inform the vrserver that our tracked device's pose has updated, giving it the pose returned by our GetPose().
 		vr::VRServerDriverHost()->TrackedDevicePoseUpdated( controllerIndex, GetPose(), sizeof( vr::DriverPose_t ) );
@@ -141,7 +141,7 @@ void ControllerDevice::UpdateThread() {
 		std::this_thread::sleep_for( std::chrono::milliseconds( 5 ) );
 
         if ((side == Side::LEFT && PipeHandler::GetPipeHandler()->LeftMessageAvailable()) || (side == Side::RIGHT && PipeHandler::GetPipeHandler()->RightMessageAvailable())) {
-            printf("== Fuzzer300 Message available for controller %i\n", side);
+            printf("[Fuzzer300] Message available for controller %i\n", side);
             Message message;
             if (side == Side::LEFT) {
                 message = PipeHandler::GetPipeHandler()->PopLeftMessage();
@@ -168,7 +168,7 @@ void ControllerDevice::UpdateThread() {
                         break;
                 }
             } else {
-                printf("Fuzzer300 The message path could not be found in the list of input handles for this controller.\n");
+                printf("[Fuzzer300] The message path could not be found in the list of input handles for this controller.\n");
             }
         }
         
@@ -177,7 +177,7 @@ void ControllerDevice::UpdateThread() {
 
 void ControllerDevice::EnterStandby()
 {
-	printf( "Fuzzer300 %s hand has been put on standby", role == vr::TrackedControllerRole_LeftHand ? "Left" : "Right" );
+	printf( "[Fuzzer300] %s hand has been put on standby", role == vr::TrackedControllerRole_LeftHand ? "Left" : "Right" );
 }
 
 void ControllerDevice::Deactivate()

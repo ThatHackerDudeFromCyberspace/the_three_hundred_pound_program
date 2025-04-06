@@ -9,8 +9,8 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
     std::ifstream file(inputPath);
     nlohmann::json data = nlohmann::json::parse(file);
 
-    printf("Fuzzer300 Loading input profile: %s\n", data["jsonid"].get<std::string>().c_str());
-    printf("Fuzzer300 Got input paths:\n");
+    printf("[Fuzzer300] Loading input profile: %s\n", data["jsonid"].get<std::string>().c_str());
+    printf("[Fuzzer300] Got input paths:\n");
     
     for (auto& inputSource : data["input_source"].items()) {
         Side side = Side::BOTH;
@@ -67,5 +67,36 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
         }
     }
 
+    printf("\n\n[Fuzzer300] Generated inputs:\n");
+    for (auto& input : inputList) {
+        std::string inputType;
+        switch (input.second.inputType) {
+            case InputType::SCALAR_ONE_SIDED:
+                inputType = "SCALAR (0f 1f)";
+                break;
+            case InputType::SCALAR_TWO_SIDED:
+                inputType = "SCALAR (-1f 1f)";
+                break;
+            case InputType::BOOLEAN:
+                inputType = "BOOLEAN (0/1)";
+                break;
+        }
+
+        std::string side;
+        switch (input.second.side) {
+            case Side::LEFT:
+                side = "LEFT";
+                break;
+            case Side::RIGHT:
+                side = "RIGHT";
+                break;
+                case Side::BOTH:
+                side="BOTH";
+                break;
+        }
+
+        printf("[Fuzzer300] (%s) %s - %s\n", side.c_str(), input.first.c_str(), inputType.c_str());
+    }
+    
     return inputList;
 }
