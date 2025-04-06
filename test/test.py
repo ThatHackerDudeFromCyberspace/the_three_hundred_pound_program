@@ -20,9 +20,14 @@ import time
 #
 # Yeah I know this format is weird just... don't ask mkay? thx
 
+path = os.getenv("HOME", "/tmp") + "/300_fifo"
+if (not os.path.exists(path)):
+    print("ERR: Could not open fifo file")
+    exit(1)
+
 
 def sendMessage(hand: int, msgPath:str, msgParam: str):
-    path = os.getenv("XDG_RUNTIME_DIR", "/tmp") + "/300_fifo"
+    path = os.getenv("HOME", "/tmp") + "/300_fifo"
     print(f"Sending to path: {path}")
     toWrite = hand.to_bytes(1, 'little') + len(msgPath).to_bytes(4, 'little') + bytes(msgPath, 'ascii') + len(msgParam).to_bytes(4, 'little') + bytes(msgParam, 'ascii')
     print(f"Writing: {toWrite}")
