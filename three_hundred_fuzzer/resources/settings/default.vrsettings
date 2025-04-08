@@ -1,5 +1,6 @@
 {
   "driver_three_hundred_controller_settings": {
-    "input_profile_path": "/home/hackerdude/.steam/steam/steamapps/common/SteamVR/drivers/three_hundred_fuzzer/resources/input/controller_profile.json"
+    "input_profile_path": "{three_hundred_fuzzer}/input/controller_profile.json",
+    "input_definition_path": "/path/to/input_definition.json"
   }
 }

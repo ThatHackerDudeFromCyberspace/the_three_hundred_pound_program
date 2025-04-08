@@ -1,0 +1,13 @@
+{
+    "inputs": [
+        {
+            "path": "/input/trigger/value",
+            "type": "scalar_one_sided"
+        },
+        {
+            "path": "/input/trigger/click",
+            "type": "boolean",
+            "side": "left"
+        }
+    ]
+}

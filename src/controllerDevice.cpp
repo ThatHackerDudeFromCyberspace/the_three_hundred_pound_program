@@ -25,12 +25,14 @@ vr::EVRInitError ControllerDevice::Activate(uint32_t unObjectId) {
     // Setup inputs
     char inputProfilePath[8192];
     vr::VRSettings()->GetString("driver_three_hundred_controller_settings", "input_profile_path", inputProfilePath, sizeof(inputProfilePath));
+    char inputDefinitionPath[8192];
+    vr::VRSettings()->GetString("driver_three_hundred_controller_settings", "input_definition_path", inputDefinitionPath, sizeof(inputDefinitionPath));
 
     // Parse the inputs
-    inputList = parseInputList(inputProfilePath);
+    inputList = parseInputList(inputDefinitionPath);
 
-    // Load the profile
-    vr::VRProperties()->SetStringProperty( container, vr::Prop_InputProfilePath_String, inputProfilePath); //"{three_hundred_fuzzer}/input/controller_profile.json" );
+    // Set profile path for SteamVR
+    vr::VRProperties()->SetStringProperty( container, vr::Prop_InputProfilePath_String, inputProfilePath);
 
     // Register the inputs in the list
     for (auto& input : inputList) {
