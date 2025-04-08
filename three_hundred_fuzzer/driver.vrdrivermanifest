@@ -2,8 +2,5 @@
   "alwaysActivate": true,
   "name": "three_hundred_fuzzer",
   "directory": "",
-  "resourceOnly": false,
-  "hmd_presence": [
-    "*.*"
-  ]
+  "resourceOnly": false
 }

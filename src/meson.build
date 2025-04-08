@@ -2,9 +2,6 @@ include_dirs = include_directories('./include')
 sources = files(
     'main.cpp',
     'trackedDeviceProvider.cpp',
-    'hmdDevice.cpp',
-    'globalState.cpp',
-    'displayComponent.cpp',
     'pipeHandler.cpp',
     'controllerDevice.cpp',
     'inputParser.cpp'
