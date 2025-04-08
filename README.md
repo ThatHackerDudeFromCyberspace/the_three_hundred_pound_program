@@ -14,16 +14,15 @@ meson compile
 
 ## How do I use this
 1. Compile it
-2. Copy the `driver_three_hundred_fuzzer.so` file to the `three_hundred_fuzzer/bin/linux64` folder
-3. Copy the `three_hundred_fuzzer` folder to ` ~/.steam/steam/steamapps/common/SteamVR/drivers/`
+2. Copy the `driver_three_hundred.so` file to the `three_hundred/bin/linux64` folder
+3. Add the `three_hundred` folder to the `external_drivers` section in `~/.config/openvr/openvrpaths.vrpath`
 4. Run SteamVR
 5. Look in `test/test.py` on how to use it once it is running
 
 ### Configuration
-`default.vrsettings` contains some random config info, most of it is unimportant, however:  
-`input_profile_path` must be set to a valid input profile path - this profile path will be used to instantiate the controller's inputs.
-
-The code loads the `three_hundred_fuzzer`'s `controller_profile.json` file, but it uses the profile path specified in the `default.vrsettings` file for creating the inputs themselves. (idk why I did this ok have fun!)
+`default.vrsettings` contains some config info:
+* `input_profile_path` is the input profile path passed to SteamVR
+* `input_definition_path` must be set to the full path to the `input_definition.json` file which is used to instantiate the controller's inputs.
 
 ### Log
-Logs for this driver are in `~/.local/share/Steam/logs/vrstartup-linux.txt` and are prefixed with `[Fuzzer300]` for convenience
+Log output is prefixed with `[ThreeHundred]` for convenience
