@@ -8,8 +8,8 @@ vr::EVRInitError TrackedDeviceProvider::Init(vr::IVRDriverContext* pDriverContex
     leftController = new ControllerDevice( vr::TrackedControllerRole_LeftHand );
     rightController = new ControllerDevice( vr::TrackedControllerRole_RightHand );
 
-    vr::VRServerDriverHost()->TrackedDeviceAdded("300Controller_Left", vr::TrackedDeviceClass_Controller, leftController);
-    vr::VRServerDriverHost()->TrackedDeviceAdded("300Controller_Right", vr::TrackedDeviceClass_Controller, rightController);
+    vr::VRServerDriverHost()->TrackedDeviceAdded("ThreeHundredController_Left", vr::TrackedDeviceClass_Controller, leftController);
+    vr::VRServerDriverHost()->TrackedDeviceAdded("ThreeHundredController_Right", vr::TrackedDeviceClass_Controller, rightController);
 
     return vr::VRInitError_None;
 }

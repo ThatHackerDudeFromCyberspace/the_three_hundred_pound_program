@@ -8,7 +8,7 @@ sources = files(
 )
 
 
-shared_library('three_hundred_fuzzer',
+shared_library('three_hundred',
     sources,
     include_directories: include_dirs,
     dependencies: [openvr_dep, thread_dep],

@@ -1,9 +1,9 @@
 {
     "jsonid": "input_profile",
-    "controller_type": "fuzzer_controller",
+    "controller_type": "three_hundred_controller",
     "device_class" : "TrackedDeviceClass_Controller",
     "resource_root" : "oculus",
-    "driver_name" : "three_hundred_fuzzer",
+    "driver_name" : "three_hundred",
     "hand_priority" : -1,
     "input_bindingui_mode" : "controller_handed",
     "should_show_binding_errors" :  true,

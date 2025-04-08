@@ -19,7 +19,7 @@ vr::EVRInitError ControllerDevice::Activate(uint32_t unObjectId) {
 
     vr::PropertyContainerHandle_t container = vr::VRProperties()->TrackedDeviceToPropertyContainer(controllerIndex);
 
-    vr::VRProperties()->SetStringProperty(container, vr::Prop_ModelNumber_String, "Controller300");
+    vr::VRProperties()->SetStringProperty(container, vr::Prop_ModelNumber_String, "ThreeHundredController");
     vr::VRProperties()->SetInt32Property(container, vr::Prop_ControllerRoleHint_Int32, role);
 
     // Setup inputs
@@ -85,14 +85,14 @@ vr::DriverPose_t ControllerDevice::GetPose()
 }
 
 void ControllerDevice::UpdateThread() {
-    printf("[Fuzzer300] Update Thread started for controller\n");
+    printf("[ThreeHundred] Update Thread started for controller\n");
     while (isActive) {
 		vr::VRServerDriverHost()->TrackedDevicePoseUpdated( controllerIndex, GetPose(), sizeof( vr::DriverPose_t ) );
 
 		std::this_thread::sleep_for( std::chrono::milliseconds( 5 ) );
 
         if ((side == Side::LEFT && PipeHandler::GetPipeHandler()->LeftMessageAvailable()) || (side == Side::RIGHT && PipeHandler::GetPipeHandler()->RightMessageAvailable())) {
-            printf("[Fuzzer300] Message available for controller %s\n", side == Side::LEFT ? "LEFT" : "RIGHT");
+            printf("[ThreeHundred] Message available for controller %s\n", side == Side::LEFT ? "LEFT" : "RIGHT");
             Message message;
             if (side == Side::LEFT) {
                 message = PipeHandler::GetPipeHandler()->PopLeftMessage();
@@ -104,7 +104,7 @@ void ControllerDevice::UpdateThread() {
                 switch (inputList[message.path].inputType) {
                     case InputType::SCALAR_ONE_SIDED:
                     case InputType::SCALAR_TWO_SIDED:
-                        printf("[Fuzzer300] Setting [%s] to scalar float: [%f]\n", message.path.c_str(), atof(message.param.c_str()));
+                        printf("[ThreeHundred] Setting [%s] to scalar float: [%f]\n", message.path.c_str(), atof(message.param.c_str()));
                         vr::VRDriverInput()->UpdateScalarComponent(
                             inputHandles[message.path],
                             atof(message.param.c_str()),
@@ -112,7 +112,7 @@ void ControllerDevice::UpdateThread() {
                         );
                         break;
                     case InputType::BOOLEAN:
-                        printf("[Fuzzer300] Setting [%s] to boolean: [%i]\n", message.path.c_str(), atoi(message.param.c_str()));
+                        printf("[ThreeHundred] Setting [%s] to boolean: [%i]\n", message.path.c_str(), atoi(message.param.c_str()));
                         vr::VRDriverInput()->UpdateBooleanComponent(
                             inputHandles[message.path],
                             atoi(message.param.c_str()) == 1,
@@ -121,7 +121,7 @@ void ControllerDevice::UpdateThread() {
                         break;
                 }
             } else {
-                printf("[Fuzzer300] The message path could not be found in the list of input handles for this controller.\n");
+                printf("[ThreeHundred] The message path could not be found in the list of input handles for this controller.\n");
             }
         }
         
@@ -130,7 +130,7 @@ void ControllerDevice::UpdateThread() {
 
 void ControllerDevice::EnterStandby()
 {
-	printf( "[Fuzzer300] %s hand has been put on standby", role == vr::TrackedControllerRole_LeftHand ? "Left" : "Right" );
+	printf( "[ThreeHundred] %s hand has been put on standby", role == vr::TrackedControllerRole_LeftHand ? "Left" : "Right" );
 }
 
 void ControllerDevice::Deactivate()

@@ -9,8 +9,8 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
     std::ifstream file(inputPath);
     nlohmann::json data = nlohmann::json::parse(file);
 
-    printf("[Fuzzer300] Loading input definition: %s\n", inputPath.c_str());
-    printf("[Fuzzer300] Got input paths:\n");
+    printf("[ThreeHundred] Loading input definition: %s\n", inputPath.c_str());
+    printf("[ThreeHundred] Got input paths:\n");
 
     for (auto& inputSource : data["inputs"]) {
         Side side = Side::BOTH;
@@ -47,7 +47,7 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
         };
     }
 
-    printf("\n\n[Fuzzer300] Generated inputs:\n");
+    printf("\n\n[ThreeHundred] Generated inputs:\n");
     for (auto& input : inputList) {
         std::string inputType;
         switch (input.second.inputType) {
@@ -75,7 +75,7 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
                 break;
         }
 
-        printf("[Fuzzer300] (%s) %s - %s\n", side.c_str(), input.first.c_str(), inputType.c_str());
+        printf("[ThreeHundred] (%s) %s - %s\n", side.c_str(), input.first.c_str(), inputType.c_str());
     }
     
     return inputList;
