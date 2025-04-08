@@ -16,10 +16,10 @@ struct Message {
 
 class PipeHandler {
 public:
+    static void InitPipeHandler(const std::filesystem::path& fifoPath) {
+        pipeHandler = new PipeHandler(fifoPath);
+    };
     static PipeHandler* GetPipeHandler() {
-        if (pipeHandler == NULL) {
-            pipeHandler = new PipeHandler();
-        }
         return pipeHandler;
     };
 
@@ -30,11 +30,11 @@ public:
 private:
     static PipeHandler* pipeHandler;
 
-    PipeHandler();
+    PipeHandler(const std::filesystem::path& fifoPath);
     void readThreadWorker();
 
     std::thread readerThread;
-    std::filesystem::path fifoPath = "/tmp";
+    const std::filesystem::path fifoPath;
 
     std::queue<Message> leftMessages;
     std::queue<Message> rightMessages;

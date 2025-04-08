@@ -8,11 +8,7 @@
 
 PipeHandler* PipeHandler::pipeHandler = NULL;
 
-PipeHandler::PipeHandler() {
-    if (getenv("HOME") != NULL) {
-        fifoPath = getenv("HOME");
-    };
-
+PipeHandler::PipeHandler(const std::filesystem::path& fifoPath): fifoPath(fifoPath) {
     if (std::filesystem::exists(fifoPath / "three_hundred_driver_fifo")) {
         remove((fifoPath / "three_hundred_driver_fifo").c_str());
     }

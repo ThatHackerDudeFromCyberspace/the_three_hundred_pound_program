@@ -1,4 +1,7 @@
 {
+  "driver_three_hundred_settings": {
+    "fifo_path": "/tmp"
+  },
   "driver_three_hundred_controller_settings": {
     "input_profile_path": "{three_hundred}/input/controller_profile.json",
     "input_definition_path": "/path/to/input_definition.json"

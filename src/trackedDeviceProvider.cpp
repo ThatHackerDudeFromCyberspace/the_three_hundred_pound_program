@@ -1,9 +1,14 @@
 #include "trackedDeviceProvider.h"
 #include "controllerDevice.h"
+#include "pipeHandler.h"
 #include "openvr_driver.h"
 
 vr::EVRInitError TrackedDeviceProvider::Init(vr::IVRDriverContext* pDriverContext) {
     VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
+
+    char fifoPath[8192];
+    vr::VRSettings()->GetString("driver_three_hundred_settings", "fifo_path", fifoPath, sizeof(fifoPath));
+    PipeHandler::InitPipeHandler(fifoPath);
 
     leftController = new ControllerDevice( vr::TrackedControllerRole_LeftHand );
     rightController = new ControllerDevice( vr::TrackedControllerRole_RightHand );
