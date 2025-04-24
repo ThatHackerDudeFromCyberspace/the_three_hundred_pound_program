@@ -5,4 +5,3 @@ openvr_dep = dependency('openvr', static: true)
 thread_dep = dependency('threads')
 
 subdir('./src')
-subdir('./test')

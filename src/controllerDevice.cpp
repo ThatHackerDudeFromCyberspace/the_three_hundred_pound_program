@@ -2,7 +2,6 @@
 #include "inputParser.h"
 #include "openvr_driver.h"
 #include "pipeHandler.h"
-#include "vrmath.h"
 
 ControllerDevice::ControllerDevice( vr::ETrackedControllerRole role ) {
     isActive = false;
@@ -20,18 +19,20 @@ vr::EVRInitError ControllerDevice::Activate(uint32_t unObjectId) {
 
     vr::PropertyContainerHandle_t container = vr::VRProperties()->TrackedDeviceToPropertyContainer(controllerIndex);
 
-    vr::VRProperties()->SetStringProperty(container, vr::Prop_ModelNumber_String, "Controller300");
+    vr::VRProperties()->SetStringProperty(container, vr::Prop_ModelNumber_String, "ThreeHundredController");
     vr::VRProperties()->SetInt32Property(container, vr::Prop_ControllerRoleHint_Int32, role);
 
     // Setup inputs
     char inputProfilePath[8192];
     vr::VRSettings()->GetString("driver_three_hundred_controller_settings", "input_profile_path", inputProfilePath, sizeof(inputProfilePath));
+    char inputDefinitionPath[8192];
+    vr::VRSettings()->GetString("driver_three_hundred_controller_settings", "input_definition_path", inputDefinitionPath, sizeof(inputDefinitionPath));
 
     // Parse the inputs
-    inputList = parseInputList(inputProfilePath);
+    inputList = parseInputList(inputDefinitionPath);
 
-    // Load the profile
-    vr::VRProperties()->SetStringProperty( container, vr::Prop_InputProfilePath_String, inputProfilePath); //"{three_hundred_fuzzer}/input/controller_profile.json" );
+    // Set profile path for SteamVR
+    vr::VRProperties()->SetStringProperty( container, vr::Prop_InputProfilePath_String, inputProfilePath);
 
     // Register the inputs in the list
     for (auto& input : inputList) {
@@ -73,75 +74,25 @@ void ControllerDevice::DebugRequest(const char *pchRequest, char *pchResponseBuf
 
 vr::DriverPose_t ControllerDevice::GetPose()
 {
-    // Let's retrieve the Hmd pose to base our controller pose off.
-
-	// First, initialize the struct that we'll be submitting to the runtime to tell it we've updated our pose.
 	vr::DriverPose_t pose = { 0 };
-
-	// These need to be set to be valid quaternions. The device won't appear otherwise.
-	pose.qWorldFromDriverRotation.w = 1.f;
-	pose.qDriverFromHeadRotation.w = 1.f;
-
-	vr::TrackedDevicePose_t hmd_pose{};
-
-	// GetRawTrackedDevicePoses expects an array.
-	// We only want the hmd pose, which is at index 0 of the array so we can just pass the struct in directly, instead of in an array
-	vr::VRServerDriverHost()->GetRawTrackedDevicePoses( 0.f, &hmd_pose, 1 );
-
-	// Get the position of the hmd from the 3x4 matrix GetRawTrackedDevicePoses returns
-	const vr::HmdVector3_t hmd_position = HmdVector3_From34Matrix( hmd_pose.mDeviceToAbsoluteTracking );
-	// Get the orientation of the hmd from the 3x4 matrix GetRawTrackedDevicePoses returns
-	const vr::HmdQuaternion_t hmd_orientation = HmdQuaternion_FromMatrix( hmd_pose.mDeviceToAbsoluteTracking );
-
-	// pitch the controller 90 degrees so the face of the controller is facing towards us
-	const vr::HmdQuaternion_t offset_orientation = HmdQuaternion_FromEulerAngles( 0.f, DEG_TO_RAD(90.f), 0.f );
-
-	// Set the pose orientation to the hmd orientation with the offset applied.
-	pose.qRotation = hmd_orientation * offset_orientation;
-
-	const vr::HmdVector3_t offset_position = {
-		role == vr::TrackedControllerRole_LeftHand ? -0.15f : 0.15f, // translate the controller left/right 0.15m depending on its role
-		0.1f,																		// shift it up a little to make it more in view
-		-0.5f,																		// put each controller 0.5m forward in front of the hmd so we can see it.
-	};
-
-	// Rotate our offset by the hmd quaternion (so the controllers are always facing towards us), and add then add the position of the hmd to put it into position.
-	const vr::HmdVector3_t position = hmd_position + ( offset_position * hmd_orientation );
-
-	// copy our position to our pose
-	pose.vecPosition[ 0 ] = position.v[ 0 ];
-	pose.vecPosition[ 1 ] = position.v[ 1 ];
-	pose.vecPosition[ 2 ] = position.v[ 2 ];
-
-	// The pose we provided is valid.
-	// This should be set is
+	pose.qWorldFromDriverRotation.w = 1.0f;
+	pose.qDriverFromHeadRotation.w = 1.0f;
+	pose.qRotation.w = 1.0f;
 	pose.poseIsValid = true;
-
-	// Our device is always connected.
-	// In reality with physical devices, when they get disconnected,
-	// set this to false and icons in SteamVR will be updated to show the device is disconnected
 	pose.deviceIsConnected = true;
-
-	// The state of our tracking. For our virtual device, it's always going to be ok,
-	// but this can get set differently to inform the runtime about the state of the device's tracking
-	// and update the icons to inform the user accordingly.
 	pose.result = vr::TrackingResult_Running_OK;
-
 	return pose;
 }
 
 void ControllerDevice::UpdateThread() {
-    printf("[Fuzzer300] Update Thread started for controller\n");
+    printf("[ThreeHundred] Update Thread started for controller\n");
     while (isActive) {
-        // Inform the vrserver that our tracked device's pose has updated, giving it the pose returned by our GetPose().
 		vr::VRServerDriverHost()->TrackedDevicePoseUpdated( controllerIndex, GetPose(), sizeof( vr::DriverPose_t ) );
 
-		// Update our pose every five milliseconds.
-		// In reality, you should update the pose whenever you have new data from your device.
 		std::this_thread::sleep_for( std::chrono::milliseconds( 5 ) );
 
         if ((side == Side::LEFT && PipeHandler::GetPipeHandler()->LeftMessageAvailable()) || (side == Side::RIGHT && PipeHandler::GetPipeHandler()->RightMessageAvailable())) {
-            printf("[Fuzzer300] Message available for controller %s\n", side == Side::LEFT ? "LEFT" : "RIGHT");
+            printf("[ThreeHundred] Message available for controller %s\n", side == Side::LEFT ? "LEFT" : "RIGHT");
             Message message;
             if (side == Side::LEFT) {
                 message = PipeHandler::GetPipeHandler()->PopLeftMessage();
@@ -153,7 +104,7 @@ void ControllerDevice::UpdateThread() {
                 switch (inputList[message.path].inputType) {
                     case InputType::SCALAR_ONE_SIDED:
                     case InputType::SCALAR_TWO_SIDED:
-                        printf("[Fuzzer300] Setting [%s] to scalar float: [%f]\n", message.path.c_str(), atof(message.param.c_str()));
+                        printf("[ThreeHundred] Setting [%s] to scalar float: [%f]\n", message.path.c_str(), atof(message.param.c_str()));
                         vr::VRDriverInput()->UpdateScalarComponent(
                             inputHandles[message.path],
                             atof(message.param.c_str()),
@@ -161,7 +112,7 @@ void ControllerDevice::UpdateThread() {
                         );
                         break;
                     case InputType::BOOLEAN:
-                        printf("[Fuzzer300] Setting [%s] to boolean: [%i]\n", message.path.c_str(), atoi(message.param.c_str()));
+                        printf("[ThreeHundred] Setting [%s] to boolean: [%i]\n", message.path.c_str(), atoi(message.param.c_str()));
                         vr::VRDriverInput()->UpdateBooleanComponent(
                             inputHandles[message.path],
                             atoi(message.param.c_str()) == 1,
@@ -170,7 +121,7 @@ void ControllerDevice::UpdateThread() {
                         break;
                 }
             } else {
-                printf("[Fuzzer300] The message path could not be found in the list of input handles for this controller.\n");
+                printf("[ThreeHundred] The message path could not be found in the list of input handles for this controller.\n");
             }
         }
         
@@ -179,7 +130,7 @@ void ControllerDevice::UpdateThread() {
 
 void ControllerDevice::EnterStandby()
 {
-	printf( "[Fuzzer300] %s hand has been put on standby", role == vr::TrackedControllerRole_LeftHand ? "Left" : "Right" );
+	printf( "[ThreeHundred] %s hand has been put on standby", role == vr::TrackedControllerRole_LeftHand ? "Left" : "Right" );
 }
 
 void ControllerDevice::Deactivate()

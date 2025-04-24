@@ -9,13 +9,13 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
     std::ifstream file(inputPath);
     nlohmann::json data = nlohmann::json::parse(file);
 
-    printf("[Fuzzer300] Loading input profile: %s\n", data["jsonid"].get<std::string>().c_str());
-    printf("[Fuzzer300] Got input paths:\n");
-    
-    for (auto& inputSource : data["input_source"].items()) {
+    printf("[ThreeHundred] Loading input definition: %s\n", inputPath.c_str());
+    printf("[ThreeHundred] Got input paths:\n");
+
+    for (auto& inputSource : data["inputs"]) {
         Side side = Side::BOTH;
-        if (!inputSource.value()["side"].is_null()) {
-            std::string inputSide = inputSource.value()["side"];
+        if (!inputSource["side"].is_null()) {
+            std::string inputSide = inputSource["side"];
             if (inputSide == "left") {
                 side = Side::LEFT;
             } else if (inputSide == "right") {
@@ -23,51 +23,31 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
             }
         }
         
-        std::string inputPath = inputSource.key();
-        std::string inputType = inputSource.value()["type"].get<std::string>();
+        std::string inputPath = inputSource["path"];
+        std::string inputTypeString = inputSource["type"].get<std::string>();
 
-        
-        if (inputType == "joystick") {
-            // Register /x and /y
-            inputList[inputPath + "/x"] = {
-                .inputType = InputType::SCALAR_TWO_SIDED,
-                .side = side
-            };
-
-            inputList[inputPath + "/y"] = {
-                .inputType = InputType::SCALAR_TWO_SIDED,
-                .side = side
-            };
+        InputType inputType;
+        if (inputTypeString == "boolean") {
+            inputType = InputType::BOOLEAN;
+        }
+        else if (inputTypeString == "scalar_one_sided") {
+            inputType = InputType::SCALAR_ONE_SIDED;
+        }
+        else if (inputTypeString == "scalar_two_sided") {
+            inputType = InputType::SCALAR_TWO_SIDED;
+        }
+        else
+        {
+            continue;
         }
 
-
-        if ((!inputSource.value()["click"].is_null()) && inputSource.value()["click"].get<bool>()) {
-            inputList[inputPath + "/click"] = {
-                .inputType = InputType::BOOLEAN,
-                .side = side
-            };
-        }
-        if ((!inputSource.value()["value"].is_null()) && inputSource.value()["value"].get<bool>()) {
-            inputList[inputPath + "/value"] = {
-                .inputType = InputType::SCALAR_ONE_SIDED,
-                .side = side
-            }; // Docs say this should be ONE_SIDED btw - "value - Optional. Represents that the input can sense a scalar value ranging from 0-1. Valid types are trigger."
-        }
-        if ((!inputSource.value()["touch"].is_null()) && inputSource.value()["touch"].get<bool>()) {
-            inputList[inputPath + "/touch"] = {
-                .inputType = InputType::BOOLEAN,
-                .side = side
-            };
-        }
-        if ((!inputSource.value()["force"].is_null()) && inputSource.value()["force"].get<bool>()) {
-            inputList[inputPath + "/force"] = {
-                .inputType = InputType::SCALAR_ONE_SIDED,
-                .side = side
-            }; // Strictly speaking docs don't state this should be ONE_SIDED but like come on
-        }
+        inputList[inputPath] = {
+            .inputType = inputType,
+            .side = side
+        };
     }
 
-    printf("\n\n[Fuzzer300] Generated inputs:\n");
+    printf("\n\n[ThreeHundred] Generated inputs:\n");
     for (auto& input : inputList) {
         std::string inputType;
         switch (input.second.inputType) {
@@ -95,7 +75,7 @@ std::map<std::string, InputInfo> parseInputList(const std::filesystem::path& inp
                 break;
         }
 
-        printf("[Fuzzer300] (%s) %s - %s\n", side.c_str(), input.first.c_str(), inputType.c_str());
+        printf("[ThreeHundred] (%s) %s - %s\n", side.c_str(), input.first.c_str(), inputType.c_str());
     }
     
     return inputList;
